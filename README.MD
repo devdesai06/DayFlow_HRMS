@@ -314,7 +314,7 @@ This project is licensed under the MIT License.
 
 Contributions, issues, and feature requests are welcome!
 
-## 👨‍💻 Author
+## 👨‍💻 Team
 
 Dev Desai
 Vishvam Modi
@@ -323,4 +323,12 @@ Meet Patel
 
 DayFlow HRMS Team
 
+## 🔥 Project Showcase
 
+![alt text](1.jpeg)
+
+![alt text](2.jpeg)
+
+![alt text](3.jpeg)
+
+![alt text](4.jpeg)
