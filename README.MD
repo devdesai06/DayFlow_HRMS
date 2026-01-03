@@ -316,4 +316,11 @@ Contributions, issues, and feature requests are welcome!
 
 ## 👨‍💻 Author
 
+Dev Desai
+Vishvam Modi
+Vatsal Bhindora
+Meet Patel
+
 DayFlow HRMS Team
+
+
