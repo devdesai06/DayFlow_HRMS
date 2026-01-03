@@ -1,0 +1,57 @@
+.employee-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.employee-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+}
+
+.employee-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  margin-bottom: 10px;
+}
+
+.employee-name {
+  margin: 6px 0 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.employee-role {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Status dot */
+.status-dot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.present {
+  background: var(--success);
+}
+
+.status-dot.leave {
+  background: var(--warning);
+}
+
+.status-dot.absent {
+  background: var(--danger);
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { verifyEmailApi } from "../api/auth.api";
 import { useNavigate, Link } from "react-router-dom";
+import { verifyEmailApi } from "../api/auth.api";
 import "../styles/auth.css";
 
 export default function VerifyEmail() {
@@ -8,18 +8,24 @@ export default function VerifyEmail() {
 
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleVerify = async (e) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
 
     try {
       await verifyEmailApi({ email, code });
-      alert("Email verified successfully. Please login.");
-      navigate("/");
+
+      navigate("/login", {
+        state: { message: "Email verified successfully. Please login." }
+      });
     } catch (err) {
-      alert(err.response?.data?.message || "Verification failed");
+      setError(
+        err?.response?.data?.message || "Verification failed. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -28,13 +34,14 @@ export default function VerifyEmail() {
   return (
     <div className="auth-container">
       <form className="auth-card" onSubmit={handleVerify}>
-        <h2 className="title">Verify Your Email</h2>
+        <h2 className="auth-title">Verify Your Email</h2>
 
-        <p style={{ fontSize: "14px", opacity: 0.8 }}>
+        <p className="auth-subtext">
           Enter the verification code sent to your email.
         </p>
 
-        <label>Email :</label>
+        {error && <p className="auth-error">{error}</p>}
+
         <input
           type="email"
           placeholder="Registered email"
@@ -43,21 +50,20 @@ export default function VerifyEmail() {
           required
         />
 
-        <label>Verification Code :</label>
         <input
           type="text"
-          placeholder="6-digit code"
+          placeholder="6-digit verification code"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           required
         />
 
-        <button className="btn-primary" disabled={loading}>
+        <button disabled={loading}>
           {loading ? "Verifying..." : "Verify Email"}
         </button>
 
-        <p className="link-text">
-          Already verified? <Link to="/">Sign In</Link>
+        <p className="auth-link">
+          Already verified? <Link to="/login">Sign In</Link>
         </p>
       </form>
     </div>

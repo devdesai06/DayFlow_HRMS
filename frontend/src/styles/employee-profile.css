@@ -1,0 +1,78 @@
+.profile-page {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+}
+
+/* Header */
+.profile-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-role {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Grid */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.profile-field input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-main);
+}
+
+/* Status */
+.profile-status {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 30px;
+}
+
+.profile-status.error {
+  color: var(--danger);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

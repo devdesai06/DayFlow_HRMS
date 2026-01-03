@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors'
 import { testDBConnection } from "./src/db/testConnection.js";
 import employeeRoutes from "./src/routes/employee.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
@@ -15,6 +16,10 @@ import swaggerSpec from "./src/config/swagger.js";
 
 const app = express();
 
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.json());
 
 await testDBConnection();

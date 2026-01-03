@@ -1,0 +1,74 @@
+.topbar {
+  height: 60px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.topbar-title {
+  font-weight: 600;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.topbar-role {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.topbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.topbar-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 160px;
+  overflow: hidden;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.dropdown-item {
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+.dropdown-item.danger {
+  color: var(--danger);
+}

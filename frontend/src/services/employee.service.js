@@ -1,34 +1,58 @@
-import { USE_MOCK } from "../config/env";
-import { employeesMock } from "../mock/employees.mock";
 import {
   getEmployees,
   getEmployeeById,
   getMyEmployeeProfile,
 } from "../api/employees.api";
 
-// 1️⃣ Get all employees
+/**
+ * Helper: validate API response
+ */
+const handleResponse = (res) => {
+  if (!res || !res.data) {
+    throw new Error("Invalid API response");
+  }
+  return res.data;
+};
+
+/**
+ * 1️⃣ Fetch all employees (Admin / HR)
+ */
 export const fetchEmployees = async () => {
-  if (USE_MOCK) {
-    return Promise.resolve(employeesMock);
+  try {
+    const res = await getEmployees();
+    return handleResponse(res);
+  } catch (error) {
+    console.error("fetchEmployees failed:", error);
+    throw error;
   }
-  const res = await getEmployees();
-  return res.data;
 };
 
-// 2️⃣ Get employee by ID
+/**
+ * 2️⃣ Fetch employee by ID (Admin / HR)
+ */
 export const fetchEmployeeById = async (id) => {
-  if (USE_MOCK) {
-    return employeesMock.find(e => e.id === id);
+  try {
+    if (!id) {
+      throw new Error("Employee ID is required");
+    }
+
+    const res = await getEmployeeById(id);
+    return handleResponse(res);
+  } catch (error) {
+    console.error(`fetchEmployeeById(${id}) failed:`, error);
+    throw error;
   }
-  const res = await getEmployeeById(id);
-  return res.data;
 };
 
-// 3️⃣ Get logged-in employee
+/**
+ * 3️⃣ Fetch logged-in employee profile
+ */
 export const fetchMyProfile = async () => {
-  if (USE_MOCK) {
-    return employeesMock[0];
+  try {
+    const res = await getMyEmployeeProfile();
+    return handleResponse(res);
+  } catch (error) {
+    console.error("fetchMyProfile failed:", error);
+    throw error;
   }
-  const res = await getMyEmployeeProfile();
-  return res.data;
 };
