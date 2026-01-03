@@ -1,237 +1,319 @@
-🚀 Dayflow HRMS
-Dayflow HRMS is a full-stack Human Resource Management System designed to manage employees, attendance, leaves, payroll, and notifications in an organization.
-The system follows a modern web architecture using React for frontend, Node.js with Express for backend APIs, and an SQL database for persistent storage.
+# DayFlow HRMS
 
+DayFlow HRMS is a full-stack Human Resource Management System designed to manage employees, attendance, leaves, payroll, and users with secure role-based access.
 
-🧱 Tech Stack
-Frontend
-React JS (Create React App)
-React Router DOM
-Context API for authentication state
-Axios for API communication
-Plain CSS for styling
+The system supports Employees, HR, and Admin roles and provides a clean dashboard-driven workflow with real backend APIs and Swagger documentation.
 
-Backend
-Node.js
-Express.js
-RESTful API architecture
-JWT-based authentication
+---
 
-Database
-SQL (Relational Database)
-Normalized schema with foreign key relationships
+## 🚀 Features
 
+### 🔐 Authentication & Authorization
+- JWT-based authentication
+- Role-based access (ADMIN / HR / EMPLOYEE)
+- Protected routes (frontend & backend)
+- Secure API access using Bearer tokens
 
-🎯 Project Objective
-The main objective of Dayflow HRMS is to:
-Provide role-based access for Employees and Admins
-Centralize employee information
-Track daily attendance
-Manage leave requests and approvals
-Maintain payroll records
-Send system notifications
-Follow clean and scalable architecture
+### 👥 Employee Management
+- Create, view, update, delete employees
+- View own profile
+- Admin/HR access to all employees
 
+### ⏱ Attendance Management
+- Daily check-in & check-out
+- Attendance history
+- Admin/HR attendance overview
+- Duplicate check-in prevention
 
-📁 Project Structure Overview
-Frontend (React)
-├── auth/           → Login, Register, Verify Email, ProtectedRoute
-├── components/     → Sidebar, Topbar, EmployeeCard
-├── context/        → Authentication context
-├── dashboard/      → Employee & Admin dashboards
-├── layouts/        → Shared dashboard layout
-├── pages/          → Admin pages, Employee pages, Profile pages
-├── services/       → API abstraction layer
-├── styles/         → Modular CSS files
+### 🏖 Leave Management
+- Apply for leave (Employee)
+- View personal leave requests
+- Admin/HR approve or reject leaves
+- Leave types management
 
-Backend (Node + Express)
-├── routes/         → Auth, Users, Employees, Attendance, Leaves, Payroll
-├── controllers/    → Request handling logic
-├── middleware/     → Auth & role checks
-├── models/         → SQL query handlers
+### 💰 Payroll Management
+- Create payroll records
+- View payroll (Admin / Employee)
 
+### 📊 Dashboards
+- Employee dashboard (attendance, leaves, payroll)
+- Admin dashboard (employees, attendance, leaves)
 
-🔐 Authentication & Authorization
-Users log in using email and password
-JWT token is generated on successful login
-Token is sent with every protected API request
-Role-based authorization is enforced
+### 📄 API Documentation
+- Swagger UI with all routes documented
 
-Roles supported:
-EMPLOYEE
-ADMIN
+---
 
-🌐 API Routes Overview
+## 🧱 Tech Stack
 
-Authentication Routes
-POST /api/v1/auth/register
-Register a new user
+### Frontend
+- React
+- React Router
+- Axios
+- Tailwind CSS
+- Lucide Icons
 
-POST /api/v1/auth/login
-Authenticate user and return token
+### Backend
+- Node.js
+- Express.js
+- MySQL
+- JWT Authentication
+- Swagger (OpenAPI)
 
-POST /api/v1/auth/verify-email
-Verify registered email
+---
 
-User Routes
-GET /api/v1/users/me
-Get logged-in user details
+## 📁 Folder Structure
 
-GET /api/v1/users
-Get all users (Admin only)
+### Backend (/backend)
+```
+backend/
+│
+├── src/
+│   ├── config/
+│   │   ├── db.js               # MySQL connection
+│   │   ├── swagger.js          # Swagger config
+│   │
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── employee.controller.js
+│   │   ├── attendance.controller.js
+│   │   ├── leave.controller.js
+│   │   ├── leaveType.controller.js
+│   │   ├── payroll.controller.js
+│   │
+│   ├── middleware/
+│   │   ├── auth.middleware.js  # JWT verification
+│   │   ├── role.middleware.js  # Role-based access
+│   │
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── employee.routes.js
+│   │   ├── attendance.routes.js
+│   │   ├── leave.routes.js
+│   │   ├── leaveType.routes.js
+│   │   ├── payroll.routes.js
+│   │   ├── user.routes.js
+│   │
+│   ├── db/
+│   │   └── mysql.js
+│
+├── server.js                   # App entry point
+```
 
-PUT /api/v1/users/:id/status
-Activate or deactivate user (Admin)
+### Frontend (/frontend)
+```
+frontend/
+│
+├── src/
+│   ├── api/                    # Axios API wrappers
+│   │   ├── auth.api.js
+│   │   ├── attendance.api.js
+│   │   ├── employee.api.js
+│   │   ├── leaves.api.js
+│   │
+│   ├── services/               # Business logic layer
+│   │   ├── attendance.service.js
+│   │   ├── employee.service.js
+│   │   ├── leave.service.js
+│   │
+│   ├── auth/
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │
+│   ├── context/
+│   │   └── AuthContext.js
+│
+│   ├── dashboard/
+│   │   ├── EmployeeDashboard.jsx
+│   │   ├── AdminDashboard.jsx
+│
+│   ├── pages/
+│   │   ├── attendance/
+│   │   │   └── AttendancePage.jsx
+│   │   ├── leaves/
+│   │   │   └── LeavePage.jsx
+│   │   ├── profile/
+│   │   │   └── ViewEmployeeProfile.jsx
+│
+│   ├── components/
+│   │   ├── Sidebar.jsx
+│   │   ├── Topbar.jsx
+│   │   ├── EmployeeCard.jsx
+│
+│   ├── App.js
+│   ├── index.js
+```
 
-Employee Routes
-GET /api/v1/employees/me
-Get logged-in employee profile
-
-GET /api/v1/employees
-Get all employees (Admin)
-
-GET /api/v1/employees/:id
-Get employee profile by ID
-
-PUT /api/v1/employees/:id
-Update employee details
-
-Attendance Routes
-POST /api/v1/attendance/check-in
-Employee check-in
-
-POST /api/v1/attendance/check-out
-Employee check-out
-
-GET /api/v1/attendance/me
-View own attendance
-
-GET /api/v1/attendance
-View all attendance (Admin)
-
-GET /api/v1/attendance/:employeeId
-View attendance of a specific employee
-
-Leave Management Routes
-GET /api/v1/leave-types
-Get available leave types
-
-POST /api/v1/leave-types
-Create leave type (Admin)
-
-POST /api/v1/leaves
-Apply for leave
-
-GET /api/v1/leaves/me
-View own leave requests
-
-GET /api/v1/leaves
-View all leave requests (Admin)
-
-GET /api/v1/leaves/:id
-View leave request details
-
-PUT /api/v1/leaves/:id/decision
-Approve or reject leave (Admin)
-
-Payroll Routes
-GET /api/v1/payroll/me
-View own payroll
-
-GET /api/v1/payroll
-View all payrolls (Admin)
-
-POST /api/v1/payroll
-Create payroll record
-
-PUT /api/v1/payroll/:id
-Update payroll record
-
-Notifications Routes
-GET /api/v1/notifications
-Get user notifications
-
-PUT /api/v1/notifications/:id/read
-Mark notification as read
-
-
-🧭 Application Flow (How It Works)
-User logs in
-    Backend validates credentials
-    JWT token is generated
-    Frontend stores token in context
-    Protected routes become accessible
-    Role determines dashboard view
-    User interacts with HR modules
-    Backend processes requests and updates database
-
-
-📊 ER Diagram
+---
+## Entity-Relation Diagram
 ![alt text](er.jpeg)
 
-📊 ER Diagram Explanation
+## 🔐 Authentication Flow
 
-The ER diagram represents the relational structure of the HRMS database.
+1. User logs in via `/auth/login`
+2. Backend returns:
+```json
+{
+  "token": "JWT_TOKEN",
+  "role": "ADMIN | HR | EMPLOYEE"
+}
+```
+3. Token is stored in AuthContext
+4. Axios attaches token as:
+```
+Authorization: Bearer <token>
+```
+5. Protected routes verify JWT & role
 
-Users
-    Stores login and authentication details
-    Fields include email, password hash, role, and active status
-    Linked to employees and notifications
+---
 
-Employees
-    Stores employee personal and job details
-    Linked to users using user_id
-    Connected with attendance, leave requests, and payroll
+## 📌 API Routes
 
-Attendance
-    Records daily check-in and check-out
-    Linked to employees
-    Tracks attendance status
+### 🔑 Auth Routes
+```
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+```
 
-Leave Types
-    Defines types of leaves (paid or unpaid)
-    Referenced in leave requests
+### 👤 Employees
+```
+GET    /api/v1/employees/me
+GET    /api/v1/employees
+POST   /api/v1/employees
+GET    /api/v1/employees/:id
+PUT    /api/v1/employees/:id
+DELETE /api/v1/employees/:id
+```
 
-Leave Requests
-    Stores leave applications submitted by employees
-    Includes date range, reason, status
-    Reviewed by admins
+### ⏱ Attendance
+```
+POST   /api/v1/attendance/check-in
+POST   /api/v1/attendance/check-out
+GET    /api/v1/attendance/me
+GET    /api/v1/attendance
+GET    /api/v1/attendance/:employeeId
+```
 
-Payroll
-    Stores salary details of employees
-    Includes base salary, allowances, deductions, net salary
-    Linked to employees
+### 🏖 Leaves
+```
+POST   /api/v1/leaves
+GET    /api/v1/leaves
+GET    /api/v1/leaves/me
+GET    /api/v1/leaves/:id
+PUT    /api/v1/leaves/:id/decision
+```
 
-Notifications
-    Stores system notifications for users
-    Tracks read/unread status
+### 🗂 Leave Types
+```
+GET    /api/v1/leave-types
+POST   /api/v1/leave-types
+```
 
+### 💰 Payroll
+```
+POST   /api/v1/payroll
+GET    /api/v1/payroll
+GET    /api/v1/payroll/me
+```
 
-✨ Key Features
-Role-based dashboards
-Secure authentication
-Attendance tracking
-Leave management with approval flow
-Payroll management
-Notification system
-Clean UI and modular code
-Scalable REST API design
+### 👥 Users
+```
+GET    /api/v1/users/me
+GET    /api/v1/users
+PUT    /api/v1/users/:id/status
+```
 
+---
 
-▶️ How to Run the Project
-Frontend
-    npm install
-    npm start
+## 📘 Swagger Documentation (COMPULSORY)
 
-Backend
-    npm install
-    npm run dev
+DayFlow HRMS includes Swagger (OpenAPI) for full API documentation.
 
+### 📍 Swagger URL
+```
+http://localhost:4000/api-docs
+```
 
-🎓 Academic & Practical Value
-This project demonstrates:
-Full-stack web development
-REST API design
-SQL database modeling
-Real-world HRMS workflows
-Clean frontend architecture
+### What Swagger Provides
+- Complete API listing
+- Request/response schemas
+- Authorization testing
+- Role-based API visibility
+- Live API execution
+
+### How to Authorize in Swagger
+1. Click **Authorize**
+2. Enter:
+```
+Bearer <JWT_TOKEN>
+```
+3. Now test protected APIs
+
+Swagger ensures:
+- Backend contract clarity
+- Easy frontend-backend integration
+- API testing without Postman
+
+---
+
+## ⚙️ Environment Variables
+
+### Backend (.env)
+```env
+PORT=4000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=yourpassword
+DB_NAME=dayflow_hrms
+JWT_SECRET=supersecretkey
+```
+
+### Frontend (.env)
+```env
+REACT_APP_API_BASE_URL=http://localhost:4000/api/v1
+```
+
+---
+
+## 🛡 Security Notes
+
+- JWT validation on every protected route
+- Role-based middleware enforcement
+- SQL injection safe queries
+- Duplicate attendance prevention
+- Token-based frontend API access
+
+---
+
+## ✅ Project Status
+
+- ✔ Fully functional backend
+- ✔ Real database integration
+- ✔ Secure authentication
+- ✔ Swagger documented APIs
+- ✔ Scalable architecture
+
+---
+
+## 📌 Future Enhancements
+
+- Attendance auto-absent marking
+- Payroll PDF generation
+- Email notifications
+- Advanced analytics dashboards
+- Two-factor authentication
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 👨‍💻 Author
+
+DayFlow HRMS Team
