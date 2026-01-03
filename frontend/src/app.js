@@ -1,30 +1,31 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import VerifyEmail from "./auth/VerifyEmail";
-import ProtectedRoute from "./auth/ProtectedRoute";
 
-import EmployeeDashboard from "./dashboard/EmployeeDashboard";
 import AdminDashboard from "./dashboard/AdminDashboard";
+import EmployeeDashboard from "./dashboard/EmployeeDashboard";
 
-import ViewEmployeeProfile from "./pages/profile/ViewEmployeeProfile";
 import AttendancePage from "./pages/attendance/AttendancePage";
+import ViewEmployeeProfile from "./pages/profile/ViewEmployeeProfile";
+import LeavePage from "./pages/leaves/LeavePage";
+// import PayrollPage from "./pages/payroll/PayrollPage";
 
 function App() {
   return (
     <Routes>
-      {/* ================= PUBLIC ROUTES ================= */}
+      {/* ================= PUBLIC ================= */}
       <Route path="/" element={<Login />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
 
-      {/* ================= EMPLOYEE ROUTES ================= */}
+      {/* ================= EMPLOYEE ================= */}
       <Route
         path="/employee"
         element={
-          <ProtectedRoute roles={["EMPLOYEE", "ADMIN", "HR"]}>
+          <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
             <EmployeeDashboard />
           </ProtectedRoute>
         }
@@ -33,7 +34,7 @@ function App() {
       <Route
         path="/employee/profile"
         element={
-          <ProtectedRoute roles={["EMPLOYEE", "ADMIN", "HR"]}>
+          <ProtectedRoute allowedRoles={["EMPLOYEE", "ADMIN", "HR"]}>
             <ViewEmployeeProfile />
           </ProtectedRoute>
         }
@@ -42,7 +43,7 @@ function App() {
       <Route
         path="/employee/profile/:id"
         element={
-          <ProtectedRoute roles={["ADMIN", "HR"]}>
+          <ProtectedRoute allowedRoles={["ADMIN", "HR"]}>
             <ViewEmployeeProfile />
           </ProtectedRoute>
         }
@@ -51,23 +52,32 @@ function App() {
       <Route
         path="/employee/attendance"
         element={
-          <ProtectedRoute roles={["EMPLOYEE", "ADMIN", "HR"]}>
+          <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
             <AttendancePage />
           </ProtectedRoute>
         }
       />
 
-      {/* ================= ADMIN ROUTES ================= */}
+      <Route
+        path="/employee/leaves"
+        element={
+          <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
+            <LeavePage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ================= ADMIN / HR ================= */}
       <Route
         path="/admin"
         element={
-          <ProtectedRoute roles={["ADMIN"]}>
+          <ProtectedRoute allowedRoles={["ADMIN", "HR"]}>
             <AdminDashboard />
           </ProtectedRoute>
         }
       />
 
-      {/* ================= FALLBACK ================= */}
+      {/* Optional: redirect unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

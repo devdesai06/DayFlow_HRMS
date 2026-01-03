@@ -2,26 +2,35 @@ import pool from "../db/mysql.js";
 
 /**
  * POST /api/v1/attendance/check-in
- * Employee: mark check-in for today
  */
 export async function checkIn(req, res) {
   try {
     const userId = req.user.userId;
 
-    await pool.execute(
-      `
-      INSERT INTO attendance (employee_id, attendance_date, check_in, status)
-      VALUES (
-        (SELECT id FROM employees WHERE user_id = ?),
-        CURDATE(),
-        CURTIME(),
-        'PRESENT'
-      )
-      `,
+    // 1️⃣ Fetch employee ID safely
+    const [[employee]] = await pool.execute(
+      `SELECT id FROM employees WHERE user_id = ?`,
       [userId]
     );
 
-    return res.json({ message: "Checked in successfully" });
+    if (!employee) {
+      return res.status(400).json({
+        message: "Employee profile not found"
+      });
+    }
+
+    // 2️⃣ Insert attendance
+    await pool.execute(
+      `
+      INSERT INTO attendance (employee_id, attendance_date, check_in, status)
+      VALUES (?, CURDATE(), CURTIME(), 'PRESENT')
+      `,
+      [employee.id]
+    );
+
+    res.status(201).json({
+      message: "Checked in successfully"
+    });
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(400).json({
@@ -29,7 +38,8 @@ export async function checkIn(req, res) {
       });
     }
 
-    return res.status(500).json({
+    console.error("CHECK-IN ERROR:", err);
+    res.status(500).json({
       message: "Failed to check in"
     });
   }
@@ -37,31 +47,43 @@ export async function checkIn(req, res) {
 
 /**
  * POST /api/v1/attendance/check-out
- * Employee: mark check-out for today
  */
 export async function checkOut(req, res) {
   try {
     const userId = req.user.userId;
 
+    const [[employee]] = await pool.execute(
+      `SELECT id FROM employees WHERE user_id = ?`,
+      [userId]
+    );
+
+    if (!employee) {
+      return res.status(400).json({
+        message: "Employee profile not found"
+      });
+    }
+
     const [result] = await pool.execute(
       `
       UPDATE attendance
       SET check_out = CURTIME()
-      WHERE employee_id = (SELECT id FROM employees WHERE user_id = ?)
+      WHERE employee_id = ?
         AND attendance_date = CURDATE()
+        AND check_out IS NULL
       `,
-      [userId]
+      [employee.id]
     );
 
     if (result.affectedRows === 0) {
       return res.status(400).json({
-        message: "No check-in found for today"
+        message: "No active check-in found for today"
       });
     }
 
-    return res.json({ message: "Checked out successfully" });
+    res.json({ message: "Checked out successfully" });
   } catch (err) {
-    return res.status(500).json({
+    console.error("CHECK-OUT ERROR:", err);
+    res.status(500).json({
       message: "Failed to check out"
     });
   }
@@ -69,7 +91,6 @@ export async function checkOut(req, res) {
 
 /**
  * GET /api/v1/attendance/me
- * Employee: view own attendance
  */
 export async function getMyAttendance(req, res) {
   try {
@@ -77,17 +98,19 @@ export async function getMyAttendance(req, res) {
 
     const [rows] = await pool.execute(
       `
-      SELECT *
-      FROM attendance
-      WHERE employee_id = (SELECT id FROM employees WHERE user_id = ?)
-      ORDER BY attendance_date DESC
+      SELECT a.*
+      FROM attendance a
+      JOIN employees e ON e.id = a.employee_id
+      WHERE e.user_id = ?
+      ORDER BY a.attendance_date DESC
       `,
       [userId]
     );
 
-    return res.json(rows);
+    res.json(rows);
   } catch (err) {
-    return res.status(500).json({
+    console.error("FETCH MY ATTENDANCE ERROR:", err);
+    res.status(500).json({
       message: "Failed to fetch attendance"
     });
   }
@@ -95,7 +118,6 @@ export async function getMyAttendance(req, res) {
 
 /**
  * GET /api/v1/attendance
- * Admin / HR: view all attendance
  */
 export async function getAllAttendance(req, res) {
   try {
@@ -108,9 +130,10 @@ export async function getAllAttendance(req, res) {
       `
     );
 
-    return res.json(rows);
+    res.json(rows);
   } catch (err) {
-    return res.status(500).json({
+    console.error("FETCH ALL ATTENDANCE ERROR:", err);
+    res.status(500).json({
       message: "Failed to fetch attendance"
     });
   }
@@ -118,7 +141,6 @@ export async function getAllAttendance(req, res) {
 
 /**
  * GET /api/v1/attendance/:employeeId
- * Admin / HR: view attendance of specific employee
  */
 export async function getEmployeeAttendance(req, res) {
   try {
@@ -134,9 +156,10 @@ export async function getEmployeeAttendance(req, res) {
       [employeeId]
     );
 
-    return res.json(rows);
+    res.json(rows);
   } catch (err) {
-    return res.status(500).json({
+    console.error("FETCH EMP ATTENDANCE ERROR:", err);
+    res.status(500).json({
       message: "Failed to fetch employee attendance"
     });
   }

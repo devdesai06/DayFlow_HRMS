@@ -1,4 +1,42 @@
-import { CheckCircle, Calendar, DollarSign, Clock, FileText, BarChart3, Info } from "lucide-react";
+import {
+  CheckCircle,
+  Calendar,
+  DollarSign,
+  Clock,
+  FileText,
+  BarChart3,
+  Info,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+function ActionButton({ label, icon, to, disabled = false }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!disabled && to) navigate(to);
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={disabled}
+      className={`
+        group rounded-xl p-4 transition
+        border border-gray-600
+        ${
+          disabled
+            ? "bg-gray-700/40 cursor-not-allowed opacity-50"
+            : "bg-gray-700/50 hover:bg-gray-700 hover:-translate-y-1 hover:shadow-lg"
+        }
+      `}
+    >
+      <div className="flex items-center gap-3">
+        <div className="text-blue-400">{icon}</div>
+        <span className="text-white font-medium">{label}</span>
+      </div>
+    </button>
+  );
+}
 
 export default function EmployeeDashboard() {
   return (
@@ -50,10 +88,25 @@ export default function EmployeeDashboard() {
             Quick Actions
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <ActionButton label="Check In / Out" icon={<Clock />} />
-            <ActionButton label="Apply Leave" icon={<Calendar />} />
-            <ActionButton label="View Attendance" icon={<CheckCircle />} />
-            <ActionButton label="View Payroll" icon={<FileText />} />
+            <ActionButton
+              label="Check In / Out"
+              icon={<Clock />}
+              to="/employee/attendance"
+            />
+
+            <ActionButton
+              label="Apply Leave"
+              icon={<Calendar />}
+              to="/employee/leaves"
+            />
+
+            <ActionButton
+              label="View Attendance"
+              icon={<CheckCircle />}
+              to="/employee/attendance"
+            />
+
+            <ActionButton label="View Payroll" icon={<FileText />} disabled />
           </div>
         </div>
 
@@ -80,45 +133,34 @@ function StatCard({ title, value, hint, accent, icon }) {
   const accentColors = {
     success: "from-green-500/20 to-emerald-500/20 border-green-500/30",
     warning: "from-yellow-500/20 to-orange-500/20 border-yellow-500/30",
-    primary: "from-blue-500/20 to-purple-500/20 border-blue-500/30"
+    primary: "from-blue-500/20 to-purple-500/20 border-blue-500/30",
   };
 
   const iconColors = {
     success: "text-green-400",
     warning: "text-yellow-400",
-    primary: "text-blue-400"
+    primary: "text-blue-400",
   };
 
   const valueColors = {
     success: "text-green-400",
     warning: "text-yellow-400",
-    primary: "text-blue-400"
+    primary: "text-blue-400",
   };
 
   return (
-    <div className={`bg-gradient-to-br ${accentColors[accent]} backdrop-blur-xl rounded-2xl shadow-xl border p-6 transform hover:scale-105 transition duration-300`}>
+    <div
+      className={`bg-gradient-to-br ${accentColors[accent]} backdrop-blur-xl rounded-2xl shadow-xl border p-6 transform hover:scale-105 transition duration-300`}
+    >
       <div className="flex items-start justify-between mb-4">
         <p className="text-gray-300 text-sm font-medium">{title}</p>
-        <div className={iconColors[accent]}>
-          {icon}
-        </div>
+        <div className={iconColors[accent]}>{icon}</div>
       </div>
-      <h2 className={`text-4xl font-bold ${valueColors[accent]} mb-2`}>{value}</h2>
+      <h2 className={`text-4xl font-bold ${valueColors[accent]} mb-2`}>
+        {value}
+      </h2>
       <p className="text-gray-400 text-sm">{hint}</p>
     </div>
-  );
-}
-
-function ActionButton({ label, icon }) {
-  return (
-    <button className="group relative bg-gray-700/50 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 rounded-xl p-4 transition duration-300 transform hover:-translate-y-1 hover:shadow-lg">
-      <div className="flex items-center gap-3">
-        <div className="text-blue-400 group-hover:text-blue-300 transition duration-300">
-          {icon}
-        </div>
-        <span className="text-white font-medium text-left">{label}</span>
-      </div>
-    </button>
   );
 }
 
