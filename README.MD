@@ -1,6 +1,6 @@
 # DayFlow HRMS
 
-DayFlow HRMS is a full-stack Human Resource Management System designed to manage employees, attendance, leaves, payroll, and users with secure role-based access.
+DayFlow HRMS is a full-stack Human Resource Management System designed to manage employees, attendance, leaves, payroll and users with secure role-based access.
 
 The system supports Employees, HR, and Admin roles and provides a clean dashboard-driven workflow with real backend APIs and Swagger documentation.
 
