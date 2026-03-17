@@ -7,32 +7,52 @@ const EmployeeHome = () => {
   const [checkInTime, setCheckInTime] = useState(null);
   const [timer, setTimer] = useState("00:00:00");
   const [message, setMessage] = useState("");
+  const [pendingRequests, setPendingRequets] = useState(0);
+  const [attendance, setAttendance] = useState(null);
 
   useEffect(() => {
     getTodayAttendance();
+    pendingRequestFunction();
   }, []);
 
   // TIMER LOGIC
   useEffect(() => {
-    if (checkInTime) {
-      const interval = setInterval(() => {
-        const now = new Date();
-        const diff = now - new Date(checkInTime);
+    // ❌ stop if no check-in OR already checked out
+    if (!checkInTime || attendance?.checkOut) return;
 
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = now - new Date(checkInTime);
 
-        setTimer(
-          `${hours.toString().padStart(2, "0")}:${minutes
-            .toString()
-            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
-        );
-      }, 1000);
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-      return () => clearInterval(interval);
+      setTimer(
+        `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [checkInTime, attendance]);
+
+  const pendingRequestFunction = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/leave/my-leaves", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (res.data.success) {
+        setPendingRequets(res.data.count);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [checkInTime]);
+  };
 
   // GET TODAY ATTENDANCE
   const getTodayAttendance = async () => {
@@ -43,10 +63,11 @@ const EmployeeHome = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
-      if (res.data.attendance) {
+      if (res.data.success && res.data.attendance) {
+        setAttendance(res.data.attendance);
         setCheckInTime(res.data.attendance.checkIn);
       }
     } catch (error) {
@@ -64,7 +85,7 @@ const EmployeeHome = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.data.success) {
@@ -86,12 +107,14 @@ const EmployeeHome = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.data.success) {
         setMessage("Checked Out Successfully");
       }
+
+      setAttendance(response.data.attendance);
     } catch (error) {
       console.log(error);
     }
@@ -115,17 +138,13 @@ const EmployeeHome = () => {
         <p className="text-sm text-gray-600">
           Check-In:
           <span className="font-semibold ml-1">
-            {checkInTime
-              ? new Date(checkInTime).toLocaleTimeString()
-              : "--"}
+            {checkInTime ? new Date(checkInTime).toLocaleTimeString() : "--"}
           </span>
         </p>
 
         <p className="text-sm text-gray-600">
           Working:
-          <span className="font-bold text-green-600 ml-1">
-            {timer}
-          </span>
+          <span className="font-bold text-green-600 ml-1">{timer}</span>
         </p>
       </div>
 
@@ -133,8 +152,22 @@ const EmployeeHome = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="bg-white p-6 rounded-xl border shadow-sm">
           <p className="text-sm text-slate-500">Today</p>
-          <h2 className="text-xl font-semibold text-green-600">
-            {checkInTime ? "Working" : "Not Checked In"}
+          <h2
+            className={`text-xl font-semibold ${
+              attendance?.status === "Present"
+                ? "text-green-600"
+                : attendance?.status === "Absent"
+                  ? "text-red-600"
+                  : attendance?.checkIn && !attendance?.checkOut
+                    ? "text-blue-600"
+                    : "text-gray-500"
+            }`}
+          >
+            {!attendance
+              ? "Not Checked In"
+              : attendance.checkIn && !attendance.checkOut
+                ? "Working"
+                : attendance.status}
           </h2>
         </div>
 
@@ -145,7 +178,9 @@ const EmployeeHome = () => {
 
         <div className="bg-white p-6 rounded-xl border shadow-sm">
           <p className="text-sm text-slate-500">Pending Requests</p>
-          <h2 className="text-xl font-semibold text-yellow-600">1</h2>
+          <h2 className="text-xl font-semibold text-yellow-600">
+            {pendingRequests}
+          </h2>
         </div>
       </div>
 
@@ -173,9 +208,7 @@ const EmployeeHome = () => {
             </button>
           </div>
 
-          {message && (
-            <p className="text-sm text-green-600 mt-3">{message}</p>
-          )}
+          {message && <p className="text-sm text-green-600 mt-3">{message}</p>}
         </div>
 
         {/* Leave */}

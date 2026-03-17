@@ -45,10 +45,10 @@ const EmployeeNavbar = () => {
           Dashboard
         </NavLink>
 
-        <NavLink to="/employee-dashboard/attendance" className={linkClass}>
+        {/* <NavLink to="/employee-dashboard/attendance" className={linkClass}>
           <CalendarCheck size={18} />
           Attendance
-        </NavLink>
+        </NavLink> */}
 
         <NavLink to="/employee-dashboard/leave-request" className={linkClass}>
           <CalendarDays size={18} />

@@ -73,7 +73,7 @@ const allLeaveRequests = async (req, res) => {
       allLeaves,
       empName,
       totalLeaves,
-      pendingLeaves
+      pendingLeaves,
     });
   } catch (error) {
     console.error("SHOW LEAVE ERROR:", error);
@@ -119,10 +119,30 @@ const updateLeaveStatus = async (req, res) => {
   }
 };
 
+const getMyPendingLeaves = async (req, res) => {
+  try {
+    const count = await Leave.countDocuments({
+      employee: req.user._id,
+      status: "Pending",
+    });
+
+    res.status(200).json({
+      success: true,
+      count,
+    });
+  } catch (error) {
+    console.error("PENDING COUNT ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching pending leave count",
+    });
+  }
+};
 
 export {
   applyLeave,
   showLeave,
   allLeaveRequests,
   updateLeaveStatus,
+  getMyPendingLeaves,
 };

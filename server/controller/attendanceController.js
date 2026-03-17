@@ -68,6 +68,7 @@ const checkOut = async (req, res) => {
     res.status(200).json({
       success: true,
       attendance,
+      diff,
     });
   } catch (error) {
     return res.status(400).json({
@@ -77,7 +78,7 @@ const checkOut = async (req, res) => {
   }
 };
 
-const getAttendance = async () => {
+const getAttendance = async (req, res) => {
   try {
     const today = new Date().toISOString().split("T")[0];
 
@@ -90,7 +91,6 @@ const getAttendance = async () => {
       success: true,
       attendance,
     });
-    
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -99,4 +99,28 @@ const getAttendance = async () => {
   }
 };
 
-export { checkIn, checkOut, getAttendance };
+const getYearAttendance = async (req, res) => {
+  try {
+    const year = new Date().getFullYear();
+
+    const start = new Date("${year}-01-01");
+    const end = new Date("${year}-12-31");
+
+    const attendance = await Attendance.find({
+      employee: req.user._id,
+      date: { $gte: start, $lte: end },
+    });
+
+    res.status(200).json({
+      success: true,
+      attendance,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching yearly attendance",
+    });
+  }
+};
+
+export { checkIn, checkOut, getAttendance, getYearAttendance };
