@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Plus, Trash2, CheckSquare, Clock, User, Calendar } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", red: "#dc2626", amber: "#d97706", card: "#fff" };
 
@@ -18,15 +19,15 @@ const AdminTaskManager = () => {
 
   useEffect(() => { fetchTasks(); fetchEmployees(); }, []);
 
-  const fetchTasks = async () => { try { const r = await axios.get("http://localhost:5000/api/task/all", { headers }); if (r.data.success) setTasks(r.data.tasks); } catch (e) {} };
-  const fetchEmployees = async () => { try { const r = await axios.get("http://localhost:5000/api/employee/get", { headers }); if (r.data.success) setEmployees(r.data.employees || []); } catch (e) {} };
+  const fetchTasks = async () => { try { const r = await axios.get(`${API_BASE_URL}/api/task/all`, { headers }); if (r.data.success) setTasks(r.data.tasks); } catch (e) {} };
+  const fetchEmployees = async () => { try { const r = await axios.get(`${API_BASE_URL}/api/employee/get`, { headers }); if (r.data.success) setEmployees(r.data.employees || []); } catch (e) {} };
   const handleCreate = async () => {
     if (!form.title || !form.assignedTo) return;
     setSubmitting(true);
-    try { const r = await axios.post("http://localhost:5000/api/task", form, { headers }); if (r.data.success) { fetchTasks(); setShowModal(false); setForm({ title: "", description: "", assignedTo: "", priority: "Medium", dueDate: "" }); } } catch (e) {}
+    try { const r = await axios.post(`${API_BASE_URL}/api/task`, form, { headers }); if (r.data.success) { fetchTasks(); setShowModal(false); setForm({ title: "", description: "", assignedTo: "", priority: "Medium", dueDate: "" }); } } catch (e) {}
     setSubmitting(false);
   };
-  const handleDelete = async (id) => { try { await axios.delete(`http://localhost:5000/api/task/${id}`, { headers }); fetchTasks(); } catch (e) {} };
+  const handleDelete = async (id) => { try { await axios.delete(`${API_BASE_URL}/api/task/${id}`, { headers }); fetchTasks(); } catch (e) {} };
 
   const card = { background: C.card, borderRadius: "12px", border: `1px solid ${C.border}`, boxShadow: "0 1px 4px rgba(0,0,0,0.05)" };
   const inp = { width: "100%", padding: "10px 13px", background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: "8px", fontSize: "14px", color: C.text, outline: "none" };

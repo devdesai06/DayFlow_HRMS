@@ -3,6 +3,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { Clock, LogIn, LogOut, CheckCircle2, TrendingUp, CalendarPlus, ClipboardList } from "lucide-react";
 import { useAuth } from "../../context/authContext";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { white: "#fff", bg: "#f4f6f9", border: "#e2e8f0", text: "#0f172a", sub: "#64748b", muted: "#94a3b8", indigo: "#4f46e5", green: "#059669", red: "#dc2626", amber: "#d97706" };
 
@@ -35,21 +36,21 @@ const EmployeeHome = () => {
 
   const getTodayAttendance = async () => {
     try {
-      const r = await axios.get("http://localhost:5000/api/attendance/today", { headers });
+      const r = await axios.get(`${API_BASE_URL}/api/attendance/today`, { headers });
       if (r.data.success && r.data.attendance) { setAttendance(r.data.attendance); setCheckInTime(r.data.attendance.checkIn); }
     } catch (e) {}
   };
 
   const fetchPendingLeaves = async () => {
     try {
-      const r = await axios.get("http://localhost:5000/api/leave/my-leaves", { headers });
+      const r = await axios.get(`${API_BASE_URL}/api/leave/my-leaves`, { headers });
       if (r.data.success) setPendingRequests(r.data.count);
     } catch (e) {}
   };
 
   const fetchMyTasks = async () => {
     try {
-      const r = await axios.get("http://localhost:5000/api/task/my-tasks", { headers });
+      const r = await axios.get(`${API_BASE_URL}/api/task/my-tasks`, { headers });
       if (r.data.success) setMyTasksCount({ total: r.data.tasks.length, completed: r.data.tasks.filter(t => t.status === "Completed").length });
     } catch (e) {}
   };
@@ -59,7 +60,7 @@ const EmployeeHome = () => {
   const handleCheckIn = async () => {
     setLoading({ ...loading, in: true });
     try {
-      const r = await axios.post("http://localhost:5000/api/attendance/check-in", {}, { headers });
+      const r = await axios.post(`${API_BASE_URL}/api/attendance/check-in`, {}, { headers });
       if (r.data.success) { showMsg("Checked in successfully!", "success"); setCheckInTime(r.data.attendance.checkIn); setAttendance(r.data.attendance); }
     } catch (e) { showMsg(e.response?.data?.message || "Already checked in today", "error"); }
     setLoading({ ...loading, in: false });
@@ -68,7 +69,7 @@ const EmployeeHome = () => {
   const handleCheckOut = async () => {
     setLoading({ ...loading, out: true });
     try {
-      const r = await axios.post("http://localhost:5000/api/attendance/check-out", {}, { headers });
+      const r = await axios.post(`${API_BASE_URL}/api/attendance/check-out`, {}, { headers });
       if (r.data.success) { showMsg("Checked out successfully!", "success"); setAttendance(r.data.attendance); }
     } catch (e) { showMsg(e.response?.data?.message || "Please check in first", "error"); }
     setLoading({ ...loading, out: false });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api.js";
 
 const S = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", green: "#059669", red: "#dc2626", amber: "#d97706", indigo: "#4f46e5", card: "#fff" };
 const STATUS_COLORS = { Present: { bg: "#059669" }, Absent: { bg: "#dc2626" }, "Half Day": { bg: "#f59e0b" } };
@@ -13,7 +14,7 @@ const Attendance = () => {
 
   const fetchYearAttendance = async () => {
     try {
-      const r = await axios.get("http://localhost:5000/api/attendance/year", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+      const r = await axios.get(`${API_BASE_URL}/api/attendance/year`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
       if (r.data.success) {
         const map = {}, s = { Present: 0, Absent: 0, "Half Day": 0 };
         r.data.attendance.forEach(item => { const d = item.date.split("T")[0]; map[d] = item.status; if (s[item.status] !== undefined) s[item.status]++; });

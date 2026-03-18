@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Send, CheckCircle2 } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", red: "#dc2626", card: "#fff" };
 const inp = { width: "100%", padding: "10px 14px", background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: "9px", fontSize: "14px", color: C.text, outline: "none" };
@@ -15,7 +16,7 @@ const ApplyForLeave = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError("");
-    try { const r = await axios.post("http://localhost:5000/api/leave/apply", leave, { headers }); if (r.data.success) setSubmitted(true); }
+    try { const r = await axios.post(`${API_BASE_URL}/api/leave/apply`, leave, { headers }); if (r.data.success) setSubmitted(true); }
     catch (err) { setError(err.response?.data?.error || "Failed to submit request"); }
   };
 

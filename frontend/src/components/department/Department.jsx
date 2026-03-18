@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { Plus, Pencil, Trash2, Building2, Search } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", indigo: "#4f46e5", red: "#dc2626", card: "#fff" };
 
@@ -11,8 +12,8 @@ const Department = () => {
   const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
 
   useEffect(() => { fetchDepartments(); }, []);
-  const fetchDepartments = async () => { try { const r = await axios.get("http://localhost:5000/api/department", { headers }); if (r.data.success) setDepartments(r.data.departments); } catch (e) {} };
-  const handleDelete = async (id) => { if (!window.confirm("Delete this department?")) return; try { await axios.delete(`http://localhost:5000/api/department/${id}`, { headers }); setDepartments(prev => prev.filter(d => d._id !== id)); } catch (e) {} };
+  const fetchDepartments = async () => { try { const r = await axios.get(`${API_BASE_URL}/api/department`, { headers }); if (r.data.success) setDepartments(r.data.departments); } catch (e) {} };
+  const handleDelete = async (id) => { if (!window.confirm("Delete this department?")) return; try { await axios.delete(`${API_BASE_URL}/api/department/${id}`, { headers }); setDepartments(prev => prev.filter(d => d._id !== id)); } catch (e) {} };
 
   const filtered = departments.filter(d => d.dep_name.toLowerCase().includes(search.toLowerCase()));
   const card = { background: C.card, borderRadius: "12px", border: `1px solid ${C.border}`, boxShadow: "0 1px 4px rgba(0,0,0,0.05)" };

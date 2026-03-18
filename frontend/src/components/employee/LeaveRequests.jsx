@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { CalendarDays, Plus } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", red: "#dc2626", amber: "#d97706", card: "#fff" };
 const SC = { Approved: { bg: "#f0fdf4", text: "#059669", border: "#bbf7d0" }, Rejected: { bg: "#fef2f2", text: "#dc2626", border: "#fecaca" }, Pending: { bg: "#fffbeb", text: "#d97706", border: "#fde68a" } };
@@ -11,7 +12,7 @@ const LeaveRequests = () => {
   const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
 
   useEffect(() => { fetchLeaves(); }, []);
-  const fetchLeaves = async () => { try { const r = await axios.get("http://localhost:5000/api/leave/showLeave", { headers }); if (r.data.success) setLeaves(r.data.leaves); } catch (e) {} };
+  const fetchLeaves = async () => { try { const r = await axios.get(`${API_BASE_URL}/api/leave/showLeave`, { headers }); if (r.data.success) setLeaves(r.data.leaves); } catch (e) {} };
 
   const card = { background: C.card, borderRadius: "12px", border: `1px solid ${C.border}`, boxShadow: "0 1px 4px rgba(0,0,0,0.05)" };
 

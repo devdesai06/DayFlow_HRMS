@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Building2 } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", border: "#e2e8f0", indigo: "#4f46e5", card: "#fff" };
 const inp = { width: "100%", padding: "10px 14px", background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: "9px", fontSize: "14px", color: C.text, outline: "none" };
@@ -12,11 +13,11 @@ const EditDepartment = () => {
   const [dep, setDep] = useState({ dep_name: "", description: "" });
   const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
 
-  useEffect(() => { axios.get(`http://localhost:5000/api/department/${id}`, { headers }).then(r => { if (r.data.success) setDep(r.data.department); }).catch(() => {}); }, []);
+  useEffect(() => { axios.get(`${API_BASE_URL}/api/department/${id}`, { headers }).then(r => { if (r.data.success) setDep(r.data.department); }).catch(() => {}); }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try { await axios.put(`http://localhost:5000/api/department/${id}`, dep, { headers }); navigate("/admin-dashboard/departments"); } catch (e) {}
+    try { await axios.put(`${API_BASE_URL}/api/department/${id}`, dep, { headers }); navigate("/admin-dashboard/departments"); } catch (e) {}
   };
 
   return (

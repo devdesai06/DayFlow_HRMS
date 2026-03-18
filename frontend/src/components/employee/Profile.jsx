@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/authContext";
 import { Camera, Save, X, User, Mail, Briefcase, FileText } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", bg: "#f4f6f9", card: "#fff" };
 
@@ -20,11 +21,11 @@ const Profile = () => {
     // Load profile from MongoDB on mount
     const fetchProfile = async () => {
       try {
-        const r = await axios.get("http://localhost:5000/api/profile/me", { headers });
+        const r = await axios.get(`${API_BASE_URL}/api/profile/me`, { headers });
         if (r.data.success) {
           const u = r.data.user;
           setProfile({ name: u.name || "", jobTitle: u.jobTitle || "", bio: u.bio || "" });
-          if (u.profileImage) setPreview(`http://localhost:5000/${u.profileImage}`);
+          if (u.profileImage) setPreview(`${API_BASE_URL}/${u.profileImage}`);
         }
       } catch (e) {
         // Fallback to auth context
@@ -52,13 +53,13 @@ const Profile = () => {
       formData.append("bio", profile.bio);
       if (image) formData.append("profileImage", image);
 
-      const r = await axios.put("http://localhost:5000/api/profile/update", formData, { headers });
+      const r = await axios.put(`${API_BASE_URL}/api/profile/update`, formData, { headers });
       if (r.data.success) {
         setIsEditing(false);
         setImage(null);
         setSavedMsg(true);
         setTimeout(() => setSavedMsg(false), 3000);
-        if (r.data.user?.profileImage) setPreview(`http://localhost:5000/${r.data.user.profileImage}`);
+        if (r.data.user?.profileImage) setPreview(`${API_BASE_URL}/${r.data.user.profileImage}`);
       }
     } catch (e) { console.log(e); }
     setSaving(false);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ClipboardList, CheckCircle2, Clock, Circle, Calendar } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", muted: "#94a3b8", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", red: "#dc2626", amber: "#d97706", card: "#fff" };
 const STATUS_CFG = { "Pending": { icon: Circle, color: C.muted, bg: "#f8fafc", border: "#e2e8f0" }, "In Progress": { icon: Clock, color: C.indigo, bg: "#eef2ff", border: "#c7d2fe" }, "Completed": { icon: CheckCircle2, color: C.green, bg: "#f0fdf4", border: "#bbf7d0" } };
@@ -12,8 +13,8 @@ const EmployeeTaskBoard = () => {
 
   useEffect(() => { fetchMyTasks(); }, []);
 
-  const fetchMyTasks = async () => { try { const r = await axios.get("http://localhost:5000/api/task/my-tasks", { headers }); if (r.data.success) setTasks(r.data.tasks); } catch (e) {} };
-  const handleStatusChange = async (id, status) => { try { const r = await axios.put(`http://localhost:5000/api/task/${id}/status`, { status }, { headers }); if (r.data.success) fetchMyTasks(); } catch (e) {} };
+  const fetchMyTasks = async () => { try { const r = await axios.get(`${API_BASE_URL}/api/task/my-tasks`, { headers }); if (r.data.success) setTasks(r.data.tasks); } catch (e) {} };
+  const handleStatusChange = async (id, status) => { try { const r = await axios.put(`${API_BASE_URL}/api/task/${id}/status`, { status }, { headers }); if (r.data.success) fetchMyTasks(); } catch (e) {} };
 
   const card = { background: C.card, borderRadius: "12px", border: `1px solid ${C.border}`, boxShadow: "0 1px 4px rgba(0,0,0,0.05)" };
 

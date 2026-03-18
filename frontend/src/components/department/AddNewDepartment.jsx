@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Building2, CheckCircle2 } from "lucide-react";
+import API_BASE_URL from "../../config/api.js";
 
 const C = { text: "#0f172a", sub: "#475569", border: "#e2e8f0", indigo: "#4f46e5", green: "#059669", card: "#fff" };
 const inp = { width: "100%", padding: "10px 14px", background: "#f8fafc", border: "1.5px solid #e2e8f0", borderRadius: "9px", fontSize: "14px", color: C.text, outline: "none" };
@@ -14,7 +15,7 @@ const AddNewDepartment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try { const r = await axios.post("http://localhost:5000/api/department/add", dep, { headers }); if (r.data.success) navigate("/admin-dashboard/departments"); }
+    try { const r = await axios.post(`${API_BASE_URL}/api/department/add`, dep, { headers }); if (r.data.success) navigate("/admin-dashboard/departments"); }
     catch (err) { if (err.response && !err.response.data.success) alert(err.response.data.error); }
   };
 

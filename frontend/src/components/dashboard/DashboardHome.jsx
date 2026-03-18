@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Users, Building2, CalendarCheck, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../config/api.js";
 
 const S = {
   page: { fontFamily: "'Inter', sans-serif" },
@@ -47,9 +48,9 @@ const DashboardHome = () => {
   const fetchAll = async () => {
     try {
       const [deptR, empR, leaveR] = await Promise.all([
-        axios.get("http://localhost:5000/api/department", { headers }),
-        axios.get("http://localhost:5000/api/employee/get", { headers }),
-        axios.get("http://localhost:5000/api/leave/leave-requests", { headers }),
+        axios.get(`${API_BASE_URL}/api/department`, { headers }),
+        axios.get(`${API_BASE_URL}/api/employee/get`, { headers }),
+        axios.get(`${API_BASE_URL}/api/leave/leave-requests`, { headers }),
       ]);
       if (deptR.data.success) setDepartmentCount(deptR.data.departments.length);
       if (empR.data.success) setEmployeeCount(empR.data.employeesCount);

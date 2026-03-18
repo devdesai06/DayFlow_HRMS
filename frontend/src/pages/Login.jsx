@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, ArrowRight, ShieldCheck } from "lucide-react";
+import API_BASE_URL from "../config/api.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const Login = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
       if (response.data.success) {
         login(response.data.user);
         localStorage.setItem("token", response.data.token);
