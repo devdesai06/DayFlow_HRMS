@@ -1,9 +1,17 @@
-import express from 'express'
-import authMiddleware from '../middleware/authMiddleware.js'
-import { getEmployees } from '../controller/employeeController.js';
+import express from 'express';
+import verifyUser from '../middleware/authMiddleware.js';
+import adminMiddleware from '../middleware/adminMiddleware.js';
+import { getEmployees, addEmployee, deleteEmployee } from '../controller/employeeController.js';
 
 const router = express.Router();
 
-router.get("/get",authMiddleware, getEmployees);
+// GET all employees — admin only
+router.get("/get", verifyUser, adminMiddleware, getEmployees);
+
+// POST add new employee — admin only
+router.post("/add", verifyUser, adminMiddleware, addEmployee);
+
+// DELETE an employee — admin only
+router.delete("/:id", verifyUser, adminMiddleware, deleteEmployee);
 
 export default router;

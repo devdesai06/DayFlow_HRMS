@@ -22,6 +22,8 @@ const userSchema = new mongoose.Schema({
     profileImage: String,
     jobTitle: { type: String, default: "" },
     bio: { type: String, default: "" },
+    department: { type: String, default: "" },
+    employeeId: { type: String, default: "" },
 }, { timestamps: true });
 
 

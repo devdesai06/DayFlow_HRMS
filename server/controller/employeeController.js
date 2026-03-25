@@ -1,16 +1,106 @@
 import User from "../models/User.js";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
+// Helper: generate a secure random password
+const generatePassword = () => {
+  return crypto.randomBytes(9).toString("base64"); // 12 printable chars
+};
+
+// Helper: generate a unique employee ID (EMP-YYYY-XXXXXX)
+const generateEmployeeId = () => {
+  const year = new Date().getFullYear();
+  const rand = crypto.randomBytes(3).toString("hex").toUpperCase();
+  return `EMP-${year}-${rand}`;
+};
+
+// GET /api/employee/get  — admin sees all employees
 const getEmployees = async (req, res) => {
   try {
-    const employees = await User.find({ role: "employee" }).select("name email jobTitle profileImage");
+    const employees = await User.find({ role: "employee" }).select(
+      "name email jobTitle department employeeId profileImage createdAt"
+    );
     return res.status(200).json({
       success: true,
       employeesCount: employees.length,
       employees,
     });
   } catch (error) {
-    return res.status(500).json({ success: false, error: "Fetch Employee error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch employees." });
   }
 };
 
-export { getEmployees };
+// POST /api/employee/add  — admin only
+const addEmployee = async (req, res) => {
+  try {
+    const { name, email, jobTitle, department } = req.body;
+
+    // Validate required fields
+    if (!name || !email) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Name and email are required." });
+    }
+
+    // Check for duplicate email
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existing) {
+      return res
+        .status(409)
+        .json({ success: false, error: "An account with this email already exists." });
+    }
+
+    // Generate and hash password
+    const plainPassword = generatePassword();
+    const hashedPassword = await bcrypt.hash(plainPassword, 12);
+
+    // Generate unique employee ID
+    const employeeId = generateEmployeeId();
+
+    // Create employee
+    const employee = await User.create({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      role: "employee",
+      jobTitle: jobTitle?.trim() || "",
+      department: department?.trim() || "",
+      employeeId,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Employee created successfully.",
+      credentials: {
+        employeeId: employee.employeeId,
+        name: employee.name,
+        email: employee.email,
+        generatedPassword: plainPassword, // shown ONCE — not persisted
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// DELETE /api/employee/:id  — admin only
+const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const employee = await User.findOneAndDelete({ _id: id, role: "employee" });
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Employee not found." });
+    }
+    return res
+      .status(200)
+      .json({ success: true, message: "Employee deleted successfully." });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export { getEmployees, addEmployee, deleteEmployee };
