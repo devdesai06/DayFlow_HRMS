@@ -476,45 +476,51 @@ const AddEmployee = ({ onSuccess }) => {
 
             {/* Email */}
             {/* Email */}
-<div style={{ gridColumn: "1 / -1" }}>
-  <label style={labelStyle}>
-    <span style={{ color: "#e11d48" }}>*</span> Work Email
-  </label>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <label style={labelStyle}>
+                <span style={{ color: "#e11d48" }}>*</span> Work Email
+              </label>
 
-  <div style={{
-    display: "flex",
-    alignItems: "center",
-    background: "#f8fafc",
-    border: "1.5px solid #e2e8f0",
-    borderRadius: "10px",
-    padding: "0 12px",
-    transition: "all 0.15s",
-  }}
-  onFocus={e => e.currentTarget.style.border = "1.5px solid #4f46e5"}
-  onBlur={e => e.currentTarget.style.border = "1.5px solid #e2e8f0"}
-  >
-    <Mail size={15} color="#6366f1" style={{ flexShrink: 0 }} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#f8fafc",
+                  border: "1.5px solid #e2e8f0",
+                  borderRadius: "10px",
+                  padding: "0 12px",
+                  transition: "all 0.15s",
+                }}
+                onFocus={(e) =>
+                  (e.currentTarget.style.border = "1.5px solid #4f46e5")
+                }
+                onBlur={(e) =>
+                  (e.currentTarget.style.border = "1.5px solid #e2e8f0")
+                }
+              >
+                <Mail size={15} color="#6366f1" style={{ flexShrink: 0 }} />
 
-    <input
-      type="email"
-      name="email"
-      value={form.email}
-      onChange={handleChange}
-      required
-      placeholder="priya@company.com"
-      style={{
-        border: "none",
-        outline: "none",
-        background: "transparent",
-        padding: "10px 8px",
-        fontSize: "14px",
-        flex: 1,
-        color: "#0f172a",
-        fontFamily: "'Inter', sans-serif",
-      }}
-    />
-  </div>
-</div>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="priya@company.com"
+                  autoComplete="new-email"
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                    padding: "10px 8px",
+                    fontSize: "14px",
+                    flex: 1,
+                    color: "#0f172a",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                />
+              </div>
+            </div>
 
             {/* Job Title */}
             <div>
