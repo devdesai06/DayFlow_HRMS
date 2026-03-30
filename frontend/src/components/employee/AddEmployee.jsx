@@ -475,7 +475,6 @@ const AddEmployee = ({ onSuccess }) => {
             </div>
 
             {/* Email */}
-            {/* Email */}
             <div style={{ gridColumn: "1 / -1" }}>
               <label style={labelStyle}>
                 <span style={{ color: "#e11d48" }}>*</span> Work Email
@@ -501,13 +500,15 @@ const AddEmployee = ({ onSuccess }) => {
                 <Mail size={15} color="#6366f1" style={{ flexShrink: 0 }} />
 
                 <input
-                  type="email"
-                  name="email"
+                  type="text" // ⚠️ change from email → text
+                  inputMode="email" // keeps mobile keyboard correct
+                  name="work_email_random" // ⚠️ important: avoid "email"
                   value={form.email}
                   onChange={handleChange}
                   required
                   placeholder="priya@company.com"
-                  autoComplete="new-email"
+                  autoComplete="off"
+                  spellCheck={false}
                   style={{
                     border: "none",
                     outline: "none",
