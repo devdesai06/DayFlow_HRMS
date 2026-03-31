@@ -3,17 +3,25 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    service : "gmail",
-    auth : {
-        user : process.env.EMAIL,
-        pass : process.env.EMAIL_PASS,
-    }
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  auth: {
+    user: process.env.BREVO_SMPT_MAIL,
+    pass: process.env.BREVO_SMPT_PASS,
+  },
 });
 
-export const sendOTP = async(email, otp) => {
-    await transporter.sendMail({
-        to : email,
-        subject : "Login OTP",
-        text : `Your OTP is ${otp}`
+export const sendOTP = async (email, otp) => {
+  try {
+    const info = await transporter.sendMail({
+      to: email,
+      subject: "Login OTP",
+      text: `Your OTP is ${otp}`,
     });
+
+    console.log("Email sent:", info.response);
+
+  } catch (error) {
+    console.error("MAIL ERROR:", error);
+  }
 };
