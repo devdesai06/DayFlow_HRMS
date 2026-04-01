@@ -12,6 +12,29 @@ const applyLeave = async (req, res) => {
       });
     }
 
+    // ✅ Convert to Date objects
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // normalize
+
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+
+    // ✅ Check past date
+    if (from < today) {
+      return res.status(400).json({
+        success: false,
+        error: "Cannot apply leave for past dates",
+      });
+    }
+
+    // ✅ Optional: toDate should not be before fromDate
+    if (to < from) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid date range",
+      });
+    }
+
     const leave = new Leave({
       employee: req.user._id,
       leaveType,
