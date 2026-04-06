@@ -1,0 +1,40 @@
+/dayflow
+├─ ARCHITECTURE.txt
+├─ README.md
+├─ server
+│  ├─ .env
+│  ├─ .env.example
+│  ├─ package.json
+│  ├─ server.js
+│  ├─ config
+│  │  ├─ db.js
+│  │  └─ mailer.js
+│  ├─ constants
+│  │  └─ roles.js
+│  ├─ controllers
+│  │  └─ auth.controller.js
+│  ├─ middleware
+│  │  ├─ auth.js
+│  │  ├─ errorHandler.js
+│  │  ├─ notFound.js
+│  │  ├─ rbac.js
+│  │  ├─ rateLimiter.js
+│  │  └─ validate.js
+│  ├─ models
+│  │  └─ User.js
+│  ├─ routes
+│  │  └─ auth.routes.js
+│  ├─ schemas
+│  │  └─ auth.schemas.js
+│  ├─ services
+│  │  ├─ emailService.js
+│  │  └─ socketHub.js
+│  └─ utils
+│     ├─ ApiError.js
+│     ├─ ApiResponse.js
+│     ├─ asyncWrapper.js
+│     ├─ crypto.js
+│     └─ jwt.js
+└─ client
+   └─ (next)
+
