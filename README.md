@@ -32,7 +32,7 @@ DayFlow is built using the following technologies:
 - **Frontend:** React.js
 - **Backend:** Node.js, Express
 - **Database:** MongoDB
-- **Deployment:** Heroku
+- **Deployment:** Frontend : Vercel Backend : Render
 
 ## Usage Guidelines
 1. **Creating Tasks:**  
